@@ -1,8 +1,11 @@
 import Button from './Button'
 
-const Card = ({ vehiclePlateNumber, vehicleMake, lastPolicy }) => {
+const Card = ({ vehiclePlateNumber, vehicleMake, lastPolicy, id }) => {
   return (
-    <div className="p-5 space-y-3 bg-white border rounded md:w-1/3 border-slate-200 text-bold">
+    <div
+      // key={id}
+      className="p-5 space-y-3 bg-white border rounded border-slate-200 text-bold"
+    >
       <p className="">
         Vehicle Plate Number:{' '}
         <span className="text-slate-400">{vehiclePlateNumber}</span>
