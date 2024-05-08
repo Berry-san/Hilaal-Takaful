@@ -1,5 +1,5 @@
 const ConfirmDetails = () => {
-  return <div>ConfirmDetails</div>
+  return <div>ConfirmDetail</div>
 }
 
 export default ConfirmDetails
