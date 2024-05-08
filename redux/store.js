@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import authReducer from './features/auth-slice'
-
+import policyReducer from './features/policy-slice'
 let store
 
 // Check if window is defined (client-side)
@@ -13,6 +13,7 @@ if (typeof window !== 'undefined') {
   store = configureStore({
     reducer: {
       auth: authReducer,
+      policy: policyReducer,
     },
     preloadedState: persistedState, // Load initial state from sessionStorage
   })
@@ -26,6 +27,7 @@ if (typeof window !== 'undefined') {
   store = configureStore({
     reducer: {
       auth: authReducer,
+      policy: policyReducer,
     },
   })
 }

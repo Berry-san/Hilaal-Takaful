@@ -4,7 +4,6 @@ import { useState } from 'react'
 const CheckBox = ({ text }) => {
   const [isChecked, setIsChecked] = useState(false)
 
-  // Function to handle checkbox change
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked)
   }

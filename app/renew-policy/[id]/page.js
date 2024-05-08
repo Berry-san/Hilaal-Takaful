@@ -1,26 +1,29 @@
 'use client'
 
-import Router from 'next/router'
 import { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import { API_BASE } from '@/middleware/API_BASE'
 import axios from 'axios'
 import { useFormik } from 'formik'
-import { useSelector } from 'react-redux'
 import qs from 'qs'
 import BackButton from '@/components/back-button'
 import InputField from '@/components/InputField'
-import { Audio, Bars } from 'react-loader-spinner'
+import * as Yup from 'yup'
 
-const BuyPolicy = () => {
+const ConfirmDetails = ({ params }) => {
+  const { policy } = useSelector((state) => state.policy)
+  const { id } = params
+
+  const confirmPolicy = policy.find((user) => id === user.id)
+
   const [isLoading, setIsLoading] = useState(false)
   const [isFetching, setIsFetching] = useState(false)
+  // const [isChecked, setIsChecked] = useState(false)
   const [vehicleCategory, setVehicleCategory] = useState([])
   const [vehicleMake, setVehicleMake] = useState([])
   const [vehicleModel, setVehicleModel] = useState([])
   const [vehicleType, setVehicleType] = useState([])
   const [vehicleColor, setVehicleColor] = useState([])
-
-  const { role } = useSelector((state) => state.auth.user)
 
   const fetchData = async () => {
     try {
@@ -56,44 +59,53 @@ const BuyPolicy = () => {
     fetchData()
   }, [])
 
+  const validationSchema = Yup.object().shape({
+    isChecked: Yup.boolean().oneOf(
+      [true],
+      'You must verify that these details belong to you.'
+    ),
+  })
+
+  const {
+    insured_name,
+    contact_address,
+    amount,
+    email,
+    phonenumber,
+    engine_no,
+    chasis_no,
+    year_of_make,
+    registration_number,
+    engine_capacity,
+    vehicle_category_id,
+    vehicle_type_id,
+    vehicle_make_id,
+    vehicle_model_id,
+    vehicle_color_id,
+    user_type_id,
+  } = confirmPolicy
+
   const uploadValues = useFormik({
     initialValues: {
-      insured_name: '',
-      contact_address: '',
-      amount: '',
-      email: '',
-      phonenumber: '',
-      engine_no: '',
-      chasis_no: '',
-      year_of_make: '',
-      registration_number: '',
-      engine_capacity: '',
-      vehicle_category_id: '',
-      vehicle_type_id: '',
-      vehicle_make_id: '',
-      vehicle_model_id: '',
-      vehicle_color_id: '',
-      user_type_id: role,
+      insured_name,
+      contact_address,
+      amount,
+      email,
+      phonenumber,
+      engine_no,
+      chasis_no,
+      year_of_make,
+      registration_number,
+      engine_capacity,
+      vehicle_category_id,
+      vehicle_type_id,
+      vehicle_make_id,
+      vehicle_model_id,
+      vehicle_color_id,
+      user_type_id,
+      isChecked: false,
     },
-    // initialValues: {
-    //   insured_name: 'Sam',
-    //   contact_address: 'no 7 adeola road',
-    //   amount: '15000',
-    //   email: 'profshubby@gmail.com',
-    //   phonenumber: '09067508765',
-    //   engine_no: '345673245677987',
-    //   chasis_no: '87654321908765',
-    //   year_of_make: '2034',
-    //   registration_number: '56478698',
-    //   engine_capacity: '1.3hl',
-    //   vehicle_category_id: 1,
-    //   vehicle_type_id: 1,
-    //   vehicle_make_id: 1,
-    //   vehicle_model_id: 1,
-    //   vehicle_color_id: 1,
-    //   user_type_id: 1,
-    // },
-    // validationSchema: {},
+    validationSchema: validationSchema,
     onSubmit: async () => {
       setIsLoading(true)
       const config = {
@@ -111,7 +123,7 @@ const BuyPolicy = () => {
         )
         if (response.data.status_code === '0') {
           if (response.data.link) {
-            window.location.href = response.data.link // Redirect to the received link
+            window.location.href = response.data.link
           } else {
             console.error('No link found in the response')
           }
@@ -126,11 +138,7 @@ const BuyPolicy = () => {
     },
   })
 
-  return isFetching ? (
-    <div className="flex items-center justify-center">
-      <p>Loading.....</p>
-    </div>
-  ) : (
+  return (
     <div>
       <div className="text-left">
         <div className="flex items-center mb-5 space-x-5">
@@ -327,13 +335,36 @@ const BuyPolicy = () => {
               errors={uploadValues.errors.email}
             />
           </div>
+          <div>
+            <label className="flex items-center mt-3">
+              <input
+                type="checkbox"
+                id="isChecked"
+                checked={uploadValues.values.isChecked}
+                onChange={uploadValues.handleChange}
+                onBlur={uploadValues.handleBlur}
+                error={
+                  uploadValues.touched.isChecked &&
+                  uploadValues.errors.isChecked
+                }
+              />
+              <span className="ml-2">
+                I verify that these details belong to me.
+              </span>
+            </label>
+            {uploadValues.touched.isChecked && uploadValues.errors.isChecked ? (
+              <p className="mt-1 text-xs font-medium text-red-500">
+                {uploadValues.errors.isChecked}
+              </p>
+            ) : null}
+          </div>
           <div className="flex items-end justify-end">
             <button
               type="submit"
               className="flex items-center justify-center w-40 px-4 py-3 mt-5 text-sm font-medium text-center text-white rounded bg-dark"
               disabled={isLoading}
             >
-              {isLoading ? 'Loading...' : 'Make payment'}
+              {isLoading ? <p>Loading...</p> : 'Make payment'}
             </button>
           </div>
         </form>
@@ -342,4 +373,4 @@ const BuyPolicy = () => {
   )
 }
 
-export default BuyPolicy
+export default ConfirmDetails

@@ -10,6 +10,7 @@ import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
 import { loginSuccess } from '@/redux/features/auth-slice'
+import Link from 'next/link'
 const Login = () => {
   const dispatch = useDispatch()
 
@@ -156,12 +157,6 @@ const Login = () => {
                     )}
                   </button>
                 </div>
-
-                {/* {loginValue.touched.password && loginValue.errors.password ? (
-                  <p className="mt-1 text-xs font-medium text-red-500">
-                    {loginValue.errors.password}
-                  </p>
-                ) : null} */}
               </div>
             </div>
             <div className="flex items-center justify-between w-full">
@@ -170,12 +165,18 @@ const Login = () => {
                 type="submit"
                 disabled={loading}
               >
-                Log In
+                {loading ? 'Loading...' : 'Log in'}
               </button>
               {/* <Link to="/ResetPassword" className="mt-5 text-sm font-semibold">
                 Forgot Password ?
               </Link> */}
             </div>
+            <p className="mt-5 text-sm text-center">
+              Don't have an account ?{' '}
+              <Link href="/register">
+                <span className="text-sm font-semibold underline">Sign Up</span>
+              </Link>
+            </p>
           </form>
         </div>
       </div>

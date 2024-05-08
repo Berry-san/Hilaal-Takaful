@@ -6,15 +6,18 @@ import Card from '@/components/Card'
 import BackButton from '@/components/back-button'
 import axios from 'axios'
 import { API_BASE } from '@/middleware/API_BASE'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
-import * as Yup from 'yup'
 import qs from 'qs'
 import { toast } from 'react-toastify'
+import { getSinglePolicy } from '@/redux/features/policy-slice'
+import { useDispatch } from 'react-redux'
 
 const RenewPolicy = () => {
   const [loading, setLoading] = useState(false)
   const [policies, setPolicies] = useState([])
+
+  const dispatch = useDispatch()
 
   const renewValues = useFormik({
     initialValues: {
@@ -39,8 +42,9 @@ const RenewPolicy = () => {
         if (response.data['status_code'] === '0') {
           setPolicies(response.data.result)
           setLoading(false)
-          // renewValues.values.phonenumber = ''
+          console.log(policies)
         } else {
+          setLoading(false)
           console.error(response.data.message)
           toast.error(response.data.message)
         }
@@ -50,6 +54,11 @@ const RenewPolicy = () => {
       }
     },
   })
+
+  useEffect(() => {
+    dispatch(getSinglePolicy(policies))
+  }, [policies, dispatch])
+
   return (
     <>
       <section className="border-b border-slate-300">
@@ -83,15 +92,19 @@ const RenewPolicy = () => {
         </form>
       </section>
       <section className="grid grid-cols-1 gap-5 pt-10 md:grid-cols-3">
-        {policies.map((policy, index) => (
-          <Card
-            key={index}
-            id={policy.id}
-            vehicleMake={policy.vehicle_make_id}
-            vehiclePlateNumber="REDEEED"
-            lastPolicy={policy.payment_dt}
-          />
-        ))}
+        {loading ? (
+          <p>Loading....</p>
+        ) : (
+          policies.map((policy, index) => (
+            <Card
+              key={index}
+              id={policy.id}
+              vehicleMake={policy.vehicle_make_id}
+              vehiclePlateNumber="REDEEED"
+              lastPolicy={policy.payment_dt}
+            />
+          ))
+        )}
       </section>
     </>
   )

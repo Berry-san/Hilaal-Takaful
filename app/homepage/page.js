@@ -22,8 +22,7 @@ const pages = [
 export default function HomePage() {
   const { user } = useSelector((state) => state.auth)
   const { email } = user
-  // console.log(authUser)
-  console.log(email)
+
   return (
     <main className="">
       <p className="text-xl font-semibold">
