@@ -11,9 +11,7 @@ const SuccessPage = () => {
           height={250}
           alt="success"
         />
-        <p className="text-green-400 text-2xl font-semibold">
-          Payment Successful
-        </p>
+        <p className="text-green-400 text-2xl font-bold">Payment Successful</p>
       </div>
       <div className="mt-10 flex items-center justify-center">
         <Button text="Download Certificate" />
