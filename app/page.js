@@ -1,8 +1,9 @@
-import Login from './login/page'
+// import Login from './login/page'
+import HomePage from './homepage/page'
 const Home = () => {
   return (
-    <div className="flex items-center justify-center xl:mt-20">
-      <Login />
+    <div className="flex items-center justify-center">
+      <HomePage />
     </div>
   )
 }

@@ -73,7 +73,7 @@ const Login = () => {
     },
   })
   return (
-    <div className="bg-[#fff] shadow max-w-2xl rounded-md">
+    <div className="bg-[#fff] shadow max-w-md mx-auto rounded-md md:mt-20">
       <div className="px-10 pt-6 pb-3 text-center bg-white">
         <h1 className="text-2xl text-dark">Log In</h1>
       </div>

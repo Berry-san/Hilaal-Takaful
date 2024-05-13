@@ -201,14 +201,16 @@ const Register = () => {
                       className="w-full p-3 text-sm font-medium bg-[#f4f4f4] rounded"
                     >
                       <option>--</option>
-                      {userType.map((option) => (
+                      <option value="1">Agent</option>
+                      <option value="2">Admin User</option>
+                      {/* {userType.map((option) => (
                         <option
                           key={option.user_type_id}
                           value={option.user_type_id}
                         >
                           {option.user_type}
                         </option>
-                      ))}
+                      ))} */}
                     </select>
                   </div>
                   <div>
@@ -280,7 +282,7 @@ const Register = () => {
                 <div className="flex items-center justify-between w-full mt-5">
                   <p className="text-sm">
                     Existing User?{' '}
-                    <Link href="/">
+                    <Link href="/login">
                       <span className="font-semibold underline">Log In</span>
                     </Link>
                   </p>

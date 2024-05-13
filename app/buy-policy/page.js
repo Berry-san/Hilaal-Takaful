@@ -9,6 +9,8 @@ import { useSelector } from 'react-redux'
 import qs from 'qs'
 import BackButton from '@/components/back-button'
 import InputField from '@/components/InputField'
+import { getCertificate } from '@/redux/features/successful-slice'
+import { useDispatch } from 'react-redux'
 import { Audio, Bars } from 'react-loader-spinner'
 
 const BuyPolicy = () => {
@@ -20,7 +22,17 @@ const BuyPolicy = () => {
   const [vehicleType, setVehicleType] = useState([])
   const [vehicleColor, setVehicleColor] = useState([])
 
-  const { role } = useSelector((state) => state.auth.user)
+  const { isAuthenticated, role } = useSelector((state) => state.auth.user)
+
+  const dispatch = useDispatch()
+
+  let user_type_id
+
+  if (!role) {
+    user_type_id = 1
+  } else {
+    user_type_id = role
+  }
 
   const fetchData = async () => {
     try {
@@ -57,42 +69,42 @@ const BuyPolicy = () => {
   }, [])
 
   const uploadValues = useFormik({
-    initialValues: {
-      insured_name: '',
-      contact_address: '',
-      amount: '',
-      email: '',
-      phonenumber: '',
-      engine_no: '',
-      chasis_no: '',
-      year_of_make: '',
-      registration_number: '',
-      engine_capacity: '',
-      vehicle_category_id: '',
-      vehicle_type_id: '',
-      vehicle_make_id: '',
-      vehicle_model_id: '',
-      vehicle_color_id: '',
-      user_type_id: role,
-    },
     // initialValues: {
-    //   insured_name: 'Sam',
-    //   contact_address: 'no 7 adeola road',
-    //   amount: '15000',
-    //   email: 'profshubby@gmail.com',
-    //   phonenumber: '09067508765',
-    //   engine_no: '345673245677987',
-    //   chasis_no: '87654321908765',
-    //   year_of_make: '2034',
-    //   registration_number: '56478698',
-    //   engine_capacity: '1.3hl',
-    //   vehicle_category_id: 1,
-    //   vehicle_type_id: 1,
-    //   vehicle_make_id: 1,
-    //   vehicle_model_id: 1,
-    //   vehicle_color_id: 1,
-    //   user_type_id: 1,
+    //   insured_name: '',
+    //   contact_address: '',
+    //   amount: '',
+    //   email: '',
+    //   phonenumber: '',
+    //   engine_no: '',
+    //   chasis_no: '',
+    //   year_of_make: '',
+    //   registration_number: '',
+    //   engine_capacity: '',
+    //   vehicle_category_id: '',
+    //   vehicle_type_id: '',
+    //   vehicle_make_id: '',
+    //   vehicle_model_id: '',
+    //   vehicle_color_id: '',
+    //   user_type_id,
     // },
+    initialValues: {
+      insured_name: 'Sam',
+      contact_address: 'no 7 adeola road',
+      amount: '15000',
+      email: 'profshubby@gmail.com',
+      phonenumber: '09067508765',
+      engine_no: '345673245677987',
+      chasis_no: '87654321908765',
+      year_of_make: '2034',
+      registration_number: '56478698',
+      engine_capacity: '1.3hl',
+      vehicle_category_id: 1,
+      vehicle_type_id: 1,
+      vehicle_make_id: 1,
+      vehicle_model_id: 1,
+      vehicle_color_id: 1,
+      user_type_id: 1,
+    },
     // validationSchema: {},
     onSubmit: async () => {
       setIsLoading(true)
@@ -111,10 +123,15 @@ const BuyPolicy = () => {
         )
         if (response.data.status_code === '0') {
           if (response.data.link) {
-            window.location.href = response.data.link // Redirect to the received link
+            localStorage.setItem(
+              'apiResponse',
+              JSON.stringify(response.data.result[0])
+            )
+            window.location.href = response.data.link
           } else {
             console.error('No link found in the response')
           }
+          dispatch(getCertificate(response.data.result))
         } else {
           console.error('Failed to fetch data')
         }

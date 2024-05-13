@@ -14,7 +14,7 @@ const ConfirmDetails = ({ params }) => {
   const { policy } = useSelector((state) => state.policy)
   const { id } = params
 
-  const confirmPolicy = policy.find((user) => id === user.id)
+  const confirmPolicy = policy?.find((user) => id === user.id)
 
   const [isLoading, setIsLoading] = useState(false)
   const [isFetching, setIsFetching] = useState(false)
