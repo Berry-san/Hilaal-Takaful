@@ -5,9 +5,11 @@ import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import qs from 'qs'
+import { useRouter } from 'next/navigation'
 import { API_BASE } from '@/middleware/API_BASE'
 
 const SuccessPage = () => {
+  const router = useRouter()
   const [apiResponse, setApiResponse] = useState(null)
   const [certificateLink, setCertificateLink] = useState(null)
 
@@ -74,6 +76,13 @@ const SuccessPage = () => {
     getCertificate()
   }, [apiResponse])
 
+  const printCertificate = () => {
+    window.open(
+      'https://demo.bitlect.net/api/v1/policy/view-certificate?policy_no=P/2024/KN-HQ/010101/014848',
+      '_blank'
+    )
+  }
+
   // console.log(apiResponse)
   // console.log(certificateLink)
 
@@ -89,7 +98,7 @@ const SuccessPage = () => {
         <p className="text-green-400 text-2xl font-bold">Payment Successful</p>
       </div>
       <div className="mt-10 flex items-center justify-center">
-        <Button text="Download Certificate" />
+        <Button onClick={printCertificate} text="Download Certificate" />
       </div>
     </>
   )
