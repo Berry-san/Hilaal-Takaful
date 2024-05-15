@@ -24,6 +24,8 @@ const Login = () => {
     setShowPassword(!showPassword)
   }
 
+  const dontHaveAccount = "Don't have an account? "
+
   const loginValue = useFormik({
     initialValues: {
       email: '',
@@ -172,7 +174,7 @@ const Login = () => {
               </Link> */}
             </div>
             <p className="mt-5 text-sm text-center">
-              Don't have an account ?{' '}
+              {dontHaveAccount}
               <Link href="/register">
                 <span className="text-sm font-semibold underline">Sign Up</span>
               </Link>
