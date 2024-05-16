@@ -2,7 +2,7 @@
 import HomePage from './homepage/page'
 const Home = () => {
   return (
-    <div className="flex items-center justify-center">
+    <div className="">
       <HomePage />
     </div>
   )

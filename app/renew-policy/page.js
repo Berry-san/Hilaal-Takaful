@@ -115,7 +115,7 @@ const RenewPolicy = () => {
                   key={index}
                   id={policy.id}
                   vehicleMake={policy.vehicle_make_id}
-                  vehiclePlateNumber="FST234YL"
+                  vehiclePlateNumber="FST-234-YL"
                   lastPolicy={policy.payment_dt}
                 />
               ))
