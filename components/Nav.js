@@ -19,7 +19,7 @@ const Nav = () => {
           height={50}
           alt="logo"
         />
-        <p className="text-maroon font-bold text-2xl">Hilaal Takaful</p>
+        <p className="text-maroon font-bold text-2xl">Hilal Takaful</p>
       </Link>
       {isAuthenticated === false ? (
         pathname === '/login' || pathname === '/register' ? (

@@ -6,6 +6,7 @@ import { API_BASE } from '@/middleware/API_BASE'
 import axios from 'axios'
 import { useFormik } from 'formik'
 import { useSelector } from 'react-redux'
+import * as Yup from 'yup'
 import qs from 'qs'
 import BackButton from '@/components/back-button'
 import InputField from '@/components/InputField'
@@ -68,6 +69,31 @@ const BuyPolicy = () => {
     fetchData()
   }, [])
 
+  const validationSchema = Yup.object().shape({
+    insured_name: Yup.string()
+      .min(3, 'Must be more than three characters')
+      .required('Insurer Name is required'),
+    contact_address: Yup.string().required('Contact Address is required'),
+    amount: Yup.number().required('Vehicle Amount is required'),
+    email: Yup.string().email('Invalid email').required('Email is required'),
+    phonenumber: Yup.string().required('Phone Number is required'),
+    engine_no: Yup.string().required('Engine Number is required'),
+    chasis_no: Yup.string().required('Chasis Number is required'),
+    year_of_make: Yup.string().required('Year of Make is required'),
+    registration_number: Yup.string().required(
+      'Registration Number is required'
+    ),
+    engine_capacity: Yup.string().required('Engine Capacity is required'),
+    vehicle_category_id: Yup.string().required('Vehicle Category is required'),
+    vehicle_type_id: Yup.string().required('Vehicle Type is required'),
+    vehicle_make_id: Yup.string().required('Vehicle Make is required'),
+    vehicle_model_id: Yup.string().required('Vehicle Model is required'),
+    vehicle_color_id: Yup.string().required('Vehicle Color is required'),
+    isChecked: Yup.boolean()
+      .oneOf([true], 'You must verify that these details belong to you.')
+      .required('Verification is required'),
+  })
+
   const uploadValues = useFormik({
     initialValues: {
       insured_name: '',
@@ -86,6 +112,7 @@ const BuyPolicy = () => {
       vehicle_model_id: '',
       vehicle_color_id: '',
       user_type_id,
+      isChecked: false,
     },
     // initialValues: {
     //   insured_name: 'Sam',
@@ -106,6 +133,7 @@ const BuyPolicy = () => {
     //   user_type_id: 1,
     // },
     // validationSchema: {},
+    validationSchema: validationSchema,
     onSubmit: async () => {
       setIsLoading(true)
       const config = {
@@ -343,6 +371,29 @@ const BuyPolicy = () => {
               touched={uploadValues.touched.email}
               errors={uploadValues.errors.email}
             />
+          </div>
+          <div>
+            <label className="flex items-center mt-3">
+              <input
+                type="checkbox"
+                id="isChecked"
+                checked={uploadValues.values.isChecked}
+                onChange={uploadValues.handleChange}
+                onBlur={uploadValues.handleBlur}
+                error={
+                  uploadValues.touched.isChecked &&
+                  uploadValues.errors.isChecked
+                }
+              />
+              <span className="ml-2">
+                I verify that these details belong to me.
+              </span>
+            </label>
+            {uploadValues.touched.isChecked && uploadValues.errors.isChecked ? (
+              <p className="mt-1 text-xs font-medium text-red-500">
+                {uploadValues.errors.isChecked}
+              </p>
+            ) : null}
           </div>
           <div className="flex items-end justify-end">
             <button

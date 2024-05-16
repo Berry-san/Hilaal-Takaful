@@ -123,6 +123,10 @@ const ConfirmDetails = ({ params }) => {
         )
         if (response.data.status_code === '0') {
           if (response.data.link) {
+            localStorage.setItem(
+              'apiResponse',
+              JSON.stringify(response.data.result[0])
+            )
             window.location.href = response.data.link
           } else {
             console.error('No link found in the response')
@@ -143,9 +147,7 @@ const ConfirmDetails = ({ params }) => {
       <div className="text-left">
         <div className="flex items-center mb-5 space-x-5">
           <BackButton />
-          <h3 className="flex text-2xl font-bold text-left">
-            Buy a new policy
-          </h3>
+          <h3 className="flex text-2xl font-bold text-left">Confirm Details</h3>
         </div>
         <form onSubmit={uploadValues.handleSubmit} autoComplete="off">
           <div className="grid grid-cols-1 gap-3 text-left md:grid-cols-2 lg:grid-cols-3">

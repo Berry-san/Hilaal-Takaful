@@ -6,7 +6,6 @@ import qs from 'qs'
 import axios from 'axios'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-// import ClipLoader from 'react-spinners/ClipLoader'
 import { API_BASE } from '@/middleware/API_BASE'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
@@ -67,7 +66,6 @@ const Register = () => {
     onSubmit: async () => {
       setLoading(true)
       setError(null)
-      console.log(signUpValue.values)
 
       const config = {
         headers: {
@@ -84,8 +82,8 @@ const Register = () => {
         )
 
         if (+response.status === 200) {
-          toast.success(response.data.message)
-          router.push('/')
+          toast.success('User Registered Successfully')
+          router.push('/login')
         } else {
           toast.error(response.data.message)
         }

@@ -9,6 +9,7 @@ import { API_BASE } from '@/middleware/API_BASE'
 import { useEffect, useState } from 'react'
 import { useFormik } from 'formik'
 import qs from 'qs'
+import * as Yup from 'yup'
 import { toast } from 'react-toastify'
 import { getSinglePolicy } from '@/redux/features/policy-slice'
 import { useDispatch } from 'react-redux'
@@ -19,10 +20,15 @@ const RenewPolicy = () => {
 
   const dispatch = useDispatch()
 
+  const validationSchema = Yup.object().shape({
+    phonenumber: Yup.string().required('Phone Number is required'),
+  })
+
   const renewValues = useFormik({
     initialValues: {
       phonenumber: '',
     },
+    validationSchema: validationSchema,
     onSubmit: async () => {
       setLoading(true)
 
@@ -39,10 +45,10 @@ const RenewPolicy = () => {
           qs.stringify(renewValues.values),
           config
         )
+        console.log(response)
         if (response.data['status_code'] === '0') {
           setPolicies(response.data.result)
           setLoading(false)
-          console.log(policies)
         } else {
           setLoading(false)
           console.error(response.data.message)
@@ -89,21 +95,32 @@ const RenewPolicy = () => {
             />
             <Button text="Retrive details" disabled={loading} />
           </div>
+          {renewValues.touched.phonenumber && renewValues.errors.phonenumber ? (
+            <p className="mt-1 text-xs font-medium text-red-500">
+              {renewValues.errors.phonenumber}
+            </p>
+          ) : null}
         </form>
       </section>
       <section className="grid grid-cols-1 gap-5 pt-10 md:grid-cols-3">
-        {loading ? (
-          <p>Loading....</p>
+        {policies.length === 0 ? (
+          <p>No Policies Available</p>
         ) : (
-          policies.map((policy, index) => (
-            <Card
-              key={index}
-              id={policy.id}
-              vehicleMake={policy.vehicle_make_id}
-              vehiclePlateNumber="REDEEED"
-              lastPolicy={policy.payment_dt}
-            />
-          ))
+          <div>
+            {loading ? (
+              <p>Loading....</p>
+            ) : (
+              policies.map((policy, index) => (
+                <Card
+                  key={index}
+                  id={policy.id}
+                  vehicleMake={policy.vehicle_make_id}
+                  vehiclePlateNumber="FST234YL"
+                  lastPolicy={policy.payment_dt}
+                />
+              ))
+            )}
+          </div>
         )}
       </section>
     </>
