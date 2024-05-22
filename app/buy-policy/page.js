@@ -70,25 +70,25 @@ const BuyPolicy = () => {
   }, [])
 
   const validationSchema = Yup.object().shape({
-    insured_name: Yup.string()
-      .min(3, 'Must be more than three characters')
-      .required('Insurer Name is required'),
-    contact_address: Yup.string().required('Contact Address is required'),
-    amount: Yup.number().required('Vehicle Amount is required'),
-    email: Yup.string().email('Invalid email').required('Email is required'),
-    phonenumber: Yup.string().required('Phone Number is required'),
-    engine_no: Yup.string().required('Engine Number is required'),
-    chasis_no: Yup.string().required('Chasis Number is required'),
-    year_of_make: Yup.string().required('Year of Make is required'),
-    registration_number: Yup.string().required(
-      'Registration Number is required'
-    ),
-    engine_capacity: Yup.string().required('Engine Capacity is required'),
-    vehicle_category_id: Yup.string().required('Vehicle Category is required'),
-    vehicle_type_id: Yup.string().required('Vehicle Type is required'),
-    vehicle_make_id: Yup.string().required('Vehicle Make is required'),
-    vehicle_model_id: Yup.string().required('Vehicle Model is required'),
-    vehicle_color_id: Yup.string().required('Vehicle Color is required'),
+    // insured_name: Yup.string()
+    //   .min(3, 'Must be more than three characters')
+    //   .required('Insurer Name is required'),
+    // contact_address: Yup.string().required('Contact Address is required'),
+    // amount: Yup.number().required('Vehicle Amount is required'),
+    // email: Yup.string().email('Invalid email').required('Email is required'),
+    // phonenumber: Yup.string().required('Phone Number is required'),
+    // engine_no: Yup.string().required('Engine Number is required'),
+    // chasis_no: Yup.string().required('Chasis Number is required'),
+    // year_of_make: Yup.string().required('Year of Make is required'),
+    // registration_number: Yup.string().required(
+    //   'Registration Number is required'
+    // ),
+    // engine_capacity: Yup.string().required('Engine Capacity is required'),
+    // vehicle_category_id: Yup.string().required('Vehicle Category is required'),
+    // vehicle_type_id: Yup.string().required('Vehicle Type is required'),
+    // vehicle_make_id: Yup.string().required('Vehicle Make is required'),
+    // vehicle_model_id: Yup.string().required('Vehicle Model is required'),
+    // vehicle_color_id: Yup.string().required('Vehicle Color is required'),
     isChecked: Yup.boolean()
       .oneOf([true], 'You must verify that these details belong to you.')
       .required('Verification is required'),
@@ -107,7 +107,7 @@ const BuyPolicy = () => {
       registration_number: '',
       engine_capacity: '',
       vehicle_category_id: '',
-      vehicle_type_id: '',
+      vehicle_type_id: 1,
       vehicle_make_id: '',
       vehicle_model_id: '',
       vehicle_color_id: '',
@@ -133,7 +133,7 @@ const BuyPolicy = () => {
     //   user_type_id: 1,
     // },
     // validationSchema: {},
-    validationSchema: validationSchema,
+    // validationSchema: validationSchema,
     onSubmit: async () => {
       setIsLoading(true)
       const config = {
@@ -143,12 +143,16 @@ const BuyPolicy = () => {
         },
       }
 
+      console.log(uploadValues.values)
+
       try {
+        console.log(uploadValues.values)
         const response = await axios.post(
           'https://mosquepay.org/insurance_api/v1/api/hilail_third_party_payment',
           qs.stringify(uploadValues.values),
           config
         )
+        console.log(response)
         if (response.data.status_code === '0') {
           if (response.data.link) {
             localStorage.setItem(
