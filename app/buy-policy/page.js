@@ -23,6 +23,8 @@ const BuyPolicy = () => {
   const [vehicleType, setVehicleType] = useState([])
   const [vehicleColor, setVehicleColor] = useState([])
 
+  console.log(vehicleCategory, vehicleMake, vehicleType)
+
   const { isAuthenticated, role } = useSelector((state) => state.auth.user)
 
   const dispatch = useDispatch()
@@ -107,7 +109,7 @@ const BuyPolicy = () => {
       registration_number: '',
       engine_capacity: '',
       vehicle_category_id: '',
-      vehicle_type_id: 1,
+      vehicle_type_id: '',
       vehicle_make_id: '',
       vehicle_model_id: '',
       vehicle_color_id: '',
@@ -294,8 +296,29 @@ const BuyPolicy = () => {
                 ))}
               </select>
             </div>
+            <div className="">
+              <label htmlFor="" className="text-sm font-medium">
+                Vehicle Type
+              </label>
+              <select
+                value={uploadValues.values.vehicle_type_id}
+                name="vehicle_type_id"
+                onChange={uploadValues.handleChange}
+                className="w-full p-3 text-sm font-medium bg-[#f4f4f4] rounded"
+              >
+                <option>--</option>
+                {vehicleType.map((option) => (
+                  <option
+                    key={option.vehicle_type_id}
+                    value={option.vehicle_type_id}
+                  >
+                    {option.TYPE}
+                  </option>
+                ))}
+              </select>
+            </div>
             <InputField
-              type="number"
+              type="text"
               label="Engine Number"
               id="engine_no"
               value={uploadValues.values.engine_no}
@@ -305,7 +328,7 @@ const BuyPolicy = () => {
               errors={uploadValues.errors.engine_no}
             />
             <InputField
-              type="number"
+              type="text"
               label="Chasis Number"
               id="chasis_no"
               value={uploadValues.values.chasis_no}
@@ -315,7 +338,7 @@ const BuyPolicy = () => {
               errors={uploadValues.errors.chasis_no}
             />
             <InputField
-              type="number"
+              type="text"
               label="Registration Number"
               id="registration_number"
               value={uploadValues.values.registration_number}
@@ -335,7 +358,7 @@ const BuyPolicy = () => {
               errors={uploadValues.errors.engine_capacity}
             />
             <InputField
-              type="text"
+              type="number"
               label="Year of Make"
               id="year_of_make"
               value={uploadValues.values.year_of_make}
@@ -345,7 +368,7 @@ const BuyPolicy = () => {
               errors={uploadValues.errors.year_of_make}
             />
             <InputField
-              type="number"
+              type="text"
               label="Vehicle Amount"
               id="amount"
               value={uploadValues.values.amount}

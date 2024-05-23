@@ -82,9 +82,10 @@ const Register = () => {
           qs.stringify(signUpValue.values),
           config
         )
+        console.log(response)
 
-        if (+response.status === 200) {
-          toast.success('User Registered Successfully')
+        if (response.data.status_code === '0') {
+          toast.success(response.data.message)
           router.push('/login')
         } else {
           toast.error(response.data.message)
