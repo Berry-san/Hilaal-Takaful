@@ -12,6 +12,7 @@ import BackButton from '@/components/back-button'
 import InputField from '@/components/InputField'
 import { getCertificate } from '@/redux/features/successful-slice'
 import { useDispatch } from 'react-redux'
+import { toast } from 'react-toastify'
 import { Audio, Bars } from 'react-loader-spinner'
 
 const BuyPolicy = () => {
@@ -22,8 +23,9 @@ const BuyPolicy = () => {
   const [vehicleModel, setVehicleModel] = useState([])
   const [vehicleType, setVehicleType] = useState([])
   const [vehicleColor, setVehicleColor] = useState([])
+  const [amount, setAmount] = useState('')
 
-  console.log(vehicleCategory, vehicleMake, vehicleType)
+  // console.log(vehicleCategory, vehicleMake, vehicleType)
 
   const { isAuthenticated, role } = useSelector((state) => state.auth.user)
 
@@ -70,6 +72,22 @@ const BuyPolicy = () => {
   useEffect(() => {
     fetchData()
   }, [])
+
+  const formatAmount = (amount) => {
+    return new Intl.NumberFormat().format(amount)
+  }
+
+  const handleCategoryChange = (event) => {
+    const selectedCategoryId = event.target.value
+    const selectedCategory = vehicleCategory.find(
+      (category) => category.vehicle_category_id == selectedCategoryId
+    )
+    if (selectedCategory) {
+      const formattedAmount = formatAmount(selectedCategory.amount)
+      setAmount(formattedAmount)
+    }
+    uploadValues.setFieldValue('vehicle_category_id', selectedCategoryId)
+  }
 
   const validationSchema = Yup.object().shape({
     // insured_name: Yup.string()
@@ -135,7 +153,7 @@ const BuyPolicy = () => {
     //   user_type_id: 1,
     // },
     // validationSchema: {},
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     onSubmit: async () => {
       setIsLoading(true)
       const config = {
@@ -145,10 +163,7 @@ const BuyPolicy = () => {
         },
       }
 
-      console.log(uploadValues.values)
-
       try {
-        console.log(uploadValues.values)
         const response = await axios.post(
           'https://mosquepay.org/insurance_api/v1/api/hilail_third_party_payment',
           qs.stringify(uploadValues.values),
@@ -156,6 +171,7 @@ const BuyPolicy = () => {
         )
         console.log(response)
         if (response.data.status_code === '0') {
+          toast.success(response.data.message)
           if (response.data.link) {
             localStorage.setItem(
               'apiResponse',
@@ -167,12 +183,13 @@ const BuyPolicy = () => {
           }
           dispatch(getCertificate(response.data.result))
         } else {
+          toast.error(response.data.message)
           console.error('Failed to fetch data')
         }
       } catch (error) {
+        toast.error(response.data.message)
         console.error('Error fetching data:', error)
       }
-
       setIsLoading(false)
     },
   })
@@ -219,7 +236,7 @@ const BuyPolicy = () => {
               <select
                 value={uploadValues.values.vehicle_category_id}
                 name="vehicle_category_id"
-                onChange={uploadValues.handleChange}
+                onChange={handleCategoryChange}
                 className="w-full p-3 text-sm font-medium bg-[#f4f4f4] rounded"
               >
                 <option>--</option>
@@ -358,7 +375,7 @@ const BuyPolicy = () => {
               errors={uploadValues.errors.engine_capacity}
             />
             <InputField
-              type="number"
+              type="text"
               label="Year of Make"
               id="year_of_make"
               value={uploadValues.values.year_of_make}
@@ -369,9 +386,9 @@ const BuyPolicy = () => {
             />
             <InputField
               type="text"
-              label="Vehicle Amount"
+              label="Policy Amount"
               id="amount"
-              value={uploadValues.values.amount}
+              value={amount}
               onChange={uploadValues.handleChange}
               onBlur={uploadValues.handleBlur}
               touched={uploadValues.touched.amount}
