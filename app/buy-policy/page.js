@@ -396,7 +396,7 @@ const BuyPolicy = () => {
             />
             {/* <InputField type="text" label="Company name" /> */}
             <InputField
-              type="number"
+              type="tel"
               label="Phone number"
               id="phonenumber"
               value={uploadValues.values.phonenumber}
