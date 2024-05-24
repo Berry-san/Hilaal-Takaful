@@ -24,6 +24,14 @@ const BuyPolicy = () => {
   const [vehicleType, setVehicleType] = useState([])
   const [vehicleColor, setVehicleColor] = useState([])
   const [amount, setAmount] = useState('')
+  const [formattedAmount, setFormattedAmount] = useState('')
+
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'x-api-key': 987654,
+    },
+  }
 
   // console.log(vehicleCategory, vehicleMake, vehicleType)
 
@@ -52,16 +60,16 @@ const BuyPolicy = () => {
       const responses = await Promise.all([
         axios.get(API_BASE + 'vechile_category', config),
         axios.get(API_BASE + 'vechile_make', config),
-        axios.get(API_BASE + 'vechile_model', config),
+        // axios.get(API_BASE + 'vechile_model', config),
         axios.get(API_BASE + 'vechile_type', config),
         axios.get(API_BASE + 'vechile_color', config),
       ])
 
       setVehicleCategory(responses[0].data.result)
       setVehicleMake(responses[1].data.result)
-      setVehicleModel(responses[2].data.result)
-      setVehicleType(responses[3].data.result)
-      setVehicleColor(responses[4].data.result)
+      // setVehicleModel(responses[2].data.result)
+      setVehicleType(responses[2].data.result)
+      setVehicleColor(responses[3].data.result)
       setIsFetching(false)
     } catch (error) {
       console.error('Error fetching data:', error)
@@ -73,6 +81,18 @@ const BuyPolicy = () => {
     fetchData()
   }, [])
 
+  const fetchVehicleModels = async (vehicleMakeId) => {
+    try {
+      const response = await axios.get(
+        `${API_BASE}vehicle_model?vehicle_make_id=${vehicleMakeId}`,
+        config
+      )
+      setVehicleModel(response.data.result)
+    } catch (error) {
+      console.error('Error fetching vehicle models:', error)
+    }
+  }
+
   const formatAmount = (amount) => {
     return new Intl.NumberFormat().format(amount)
   }
@@ -83,10 +103,26 @@ const BuyPolicy = () => {
       (category) => category.vehicle_category_id == selectedCategoryId
     )
     if (selectedCategory) {
-      const formattedAmount = formatAmount(selectedCategory.amount)
-      setAmount(formattedAmount)
+      const formatted = formatAmount(selectedCategory.amount)
+      setAmount(selectedCategory.amount)
+      setFormattedAmount(formatted)
+      uploadValues.setFieldValue('amount', selectedCategory.amount)
     }
     uploadValues.setFieldValue('vehicle_category_id', selectedCategoryId)
+  }
+
+  const handleAmountChange = (event) => {
+    const inputAmount = event.target.value.replace(/,/g, '')
+    setAmount(inputAmount)
+    setFormattedAmount(formatAmount(inputAmount))
+    uploadValues.setFieldValue('amount', inputAmount)
+  }
+
+  const handleMakeChange = (event) => {
+    const selectedMakeId = event.target.value
+    uploadValues.setFieldValue('vehicle_make_id', selectedMakeId)
+    fetchVehicleModels(selectedMakeId)
+    console.log(vehicleModel)
   }
 
   const validationSchema = Yup.object().shape({
@@ -252,6 +288,27 @@ const BuyPolicy = () => {
             </div>
             <div className="">
               <label htmlFor="" className="text-sm font-medium">
+                Vehicle Make
+              </label>
+              <select
+                value={uploadValues.values.vehicle_make_id}
+                name="vehicle_make_id"
+                onChange={handleMakeChange}
+                className="w-full p-3 text-sm font-medium bg-[#f4f4f4] rounded"
+              >
+                <option>--</option>
+                {vehicleMake.map((option) => (
+                  <option
+                    key={option.vehicle_make_id}
+                    value={option.vehicle_make_id}
+                  >
+                    {option.make}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="">
+              <label htmlFor="" className="text-sm font-medium">
                 Vehicle Model
               </label>
               <select
@@ -271,27 +328,7 @@ const BuyPolicy = () => {
                 ))}
               </select>
             </div>
-            <div className="">
-              <label htmlFor="" className="text-sm font-medium">
-                Vehicle Make
-              </label>
-              <select
-                value={uploadValues.values.vehicle_make_id}
-                name="vehicle_make_id"
-                onChange={uploadValues.handleChange}
-                className="w-full p-3 text-sm font-medium bg-[#f4f4f4] rounded"
-              >
-                <option>--</option>
-                {vehicleMake.map((option) => (
-                  <option
-                    key={option.vehicle_make_id}
-                    value={option.vehicle_make_id}
-                  >
-                    {option.make}
-                  </option>
-                ))}
-              </select>
-            </div>
+
             <div className="">
               <label htmlFor="" className="text-sm font-medium">
                 Vehicle Color
@@ -385,11 +422,11 @@ const BuyPolicy = () => {
               errors={uploadValues.errors.year_of_make}
             />
             <InputField
-              type="number"
+              type="text"
               label="Policy Amount"
               id="amount"
-              value={amount}
-              onChange={uploadValues.handleChange}
+              value={formattedAmount}
+              onChange={handleAmountChange}
               onBlur={uploadValues.handleBlur}
               touched={uploadValues.touched.amount}
               errors={uploadValues.errors.amount}
