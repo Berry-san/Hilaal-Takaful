@@ -114,9 +114,12 @@ const RenewPolicy = () => {
                 <Card
                   key={index}
                   id={policy.id}
-                  vehicleMake={policy.vehicle_make_id}
-                  vehiclePlateNumber="FST-234-YL"
-                  lastPolicy={policy.payment_dt}
+                  // vehicleMake={policy.vehicle_make_id}
+                  // vehiclePlateNumber="FST-234-YL"
+                  // lastPolicy={policy.time_out}
+                  chasisNo={policy.chasis_no}
+                  engineNo={policy.engine_no}
+                  yearOfMake={policy.year_of_make}
                 />
               ))
             )}

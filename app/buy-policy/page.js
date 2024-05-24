@@ -345,7 +345,7 @@ const BuyPolicy = () => {
               errors={uploadValues.errors.engine_no}
             />
             <InputField
-              type="text"
+              type="number"
               label="Chasis Number"
               id="chasis_no"
               value={uploadValues.values.chasis_no}
@@ -355,7 +355,7 @@ const BuyPolicy = () => {
               errors={uploadValues.errors.chasis_no}
             />
             <InputField
-              type="text"
+              type="number"
               label="Registration Number"
               id="registration_number"
               value={uploadValues.values.registration_number}
@@ -375,7 +375,7 @@ const BuyPolicy = () => {
               errors={uploadValues.errors.engine_capacity}
             />
             <InputField
-              type="text"
+              type="number"
               label="Year of Make"
               id="year_of_make"
               value={uploadValues.values.year_of_make}
@@ -385,7 +385,7 @@ const BuyPolicy = () => {
               errors={uploadValues.errors.year_of_make}
             />
             <InputField
-              type="text"
+              type="number"
               label="Policy Amount"
               id="amount"
               value={amount}

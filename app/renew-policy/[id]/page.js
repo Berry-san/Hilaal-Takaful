@@ -307,7 +307,7 @@ const ConfirmDetails = ({ params }) => {
             />
             <InputField
               type="number"
-              label="Vehicle Amount"
+              label="Policy Amount"
               id="amount"
               value={uploadValues.values.amount}
               onChange={uploadValues.handleChange}
@@ -317,7 +317,7 @@ const ConfirmDetails = ({ params }) => {
             />
             {/* <InputField type="text" label="Company name" /> */}
             <InputField
-              type="number"
+              type="tel"
               label="Phone number"
               id="phonenumber"
               value={uploadValues.values.phonenumber}
