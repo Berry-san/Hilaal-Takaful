@@ -17,12 +17,87 @@ import { useDispatch } from 'react-redux'
 const RenewPolicy = () => {
   const [loading, setLoading] = useState(false)
   const [policies, setPolicies] = useState([])
+  const [vehicleCategory, setVehicleCategory] = useState([])
+  const [vehicleMake, setVehicleMake] = useState([])
+  const [vehicleModel, setVehicleModel] = useState([])
+  const [yearOfMake, setYearOfMake] = useState([])
+
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'x-api-key': 987654,
+    },
+  }
 
   const dispatch = useDispatch()
 
   const validationSchema = Yup.object().shape({
     phonenumber: Yup.string().required('Phone Number is required'),
   })
+
+  const fetchData = async () => {
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'x-api-key': 987654,
+        },
+      }
+      setLoading(true)
+
+      const responses = await Promise.all([
+        axios.get(API_BASE + 'vechile_category', config),
+        axios.get(API_BASE + 'vechile_make', config),
+        // axios.get(API_BASE + 'vechile_model', config),
+      ])
+
+      setVehicleCategory(responses[0].data.result)
+      setVehicleMake(responses[1].data.result)
+      // setVehicleModel(responses[2].data.result)
+      setLoading(false)
+    } catch (error) {
+      console.error('Error fetching data:', error)
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
+  const fetchVehicleModels = async (vehicleMakeId) => {
+    try {
+      const response = await axios.get(
+        `${API_BASE}vehicle_model?vehicle_make_id=${vehicleMakeId}`,
+        config
+      )
+      console.log(response)
+      setVehicleModel((prevState) => ({
+        ...prevState,
+        [vehicleMakeId]: response.data.result,
+      }))
+    } catch (error) {
+      console.error('Error fetching vehicle models:', error)
+    }
+  }
+
+  const getMakeNameById = (id) => {
+    const make = vehicleMake.find((make) => make.vehicle_make_id === id)
+    return make ? make.make : 'Unknown'
+  }
+
+  const getModelNameById = (makeId, modelId) => {
+    const models = vehicleModel[makeId] || []
+    const model = models.find((model) => model.vehicle_model_id === modelId)
+    return model ? model.model : 'Unknown'
+  }
+
+  const getCategoryNameById = (id) => {
+    const category = vehicleCategory.find(
+      (category) => category.vehicle_category_id === id
+    )
+    return category ? category.category : 'Unknown'
+  }
 
   const renewValues = useFormik({
     initialValues: {
@@ -48,6 +123,9 @@ const RenewPolicy = () => {
         console.log(response)
         if (response.data['status_code'] === '0') {
           setPolicies(response.data.result)
+          response.data.result.forEach((policy) => {
+            fetchVehicleModels(policy.vehicle_make_id)
+          })
           setLoading(false)
         } else {
           setLoading(false)
@@ -117,6 +195,14 @@ const RenewPolicy = () => {
                   // vehicleMake={policy.vehicle_make_id}
                   // vehiclePlateNumber="FST-234-YL"
                   // lastPolicy={policy.time_out}
+                  vehicleMake={getMakeNameById(policy.vehicle_make_id)}
+                  vehicleModel={getModelNameById(
+                    policy.vehicle_make_id,
+                    policy.vehicle_model_id
+                  )}
+                  vehicleCategory={getCategoryNameById(
+                    policy.vehicle_category_id
+                  )}
                   chasisNo={policy.chasis_no}
                   engineNo={policy.engine_no}
                   yearOfMake={policy.year_of_make}

@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation'
 const Card = ({
   vehiclePlateNumber,
   vehicleMake,
+  vehicleModel,
+  vehicleCategory,
   lastPolicy,
   id,
   chasisNo,
@@ -30,12 +32,14 @@ const Card = ({
       </p> */}
 
       <p className="">
-        Vehicle Chasis Number:{' '}
-        <span className="text-slate-400">{chasisNo}</span>
+        Vehicle:{' '}
+        <span className="text-slate-400">
+          {vehicleMake} {vehicleModel}
+        </span>
       </p>
       <p className="">
-        Vehicle Engine Number:{' '}
-        <span className="text-slate-400">{engineNo}</span>
+        Vehicle Category:{' '}
+        <span className="text-slate-400">{vehicleCategory}</span>
       </p>
       <p className="">
         Year of Make: <span className="text-slate-400">{yearOfMake}</span>

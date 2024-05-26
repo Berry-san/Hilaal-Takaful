@@ -11,7 +11,7 @@ const Nav = () => {
   const { isAuthenticated } = useSelector((state) => state.auth.user)
 
   return (
-    <div className="flex items-center justify-between px-5 py-5 xl:px-48 bg-white border-b border-slate-200">
+    <div className="flex items-center justify-between px-5 py-5 md:px-24 lg:px-48 bg-white border-b border-slate-200">
       <Link href="/homepage" className="flex gap-3 items-center">
         <Image
           src="/assets/images/logo.svg"
