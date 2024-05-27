@@ -9,13 +9,13 @@ const pages = [
     link: '/buy-policy',
     title: 'Buy a new Policy',
     text: 'You haven’t purchased a policy with Hilal in the past, start here.',
-    image: '',
+    image: '/assets/images/18108.jpg',
   },
   {
     link: '/renew-policy',
     title: 'Renew your Policy',
     text: 'Retrieve your details and generate a certificate instantly',
-    image: '',
+    image: '/assets/images/125165.jpg',
   },
 ]
 
@@ -37,7 +37,13 @@ export default function HomePage() {
               key={index}
               className="w-full border rounded-md shadow-lg border-slate-200"
             >
-              <div className="h-48 bg-slate-300"></div>
+              <Image
+                src={page.image}
+                width={600}
+                height={10}
+                alt=""
+                className="object-fit"
+              />
               <section className="flex justify-between p-5">
                 <div className="flex flex-col gap-3">
                   <h2 className="font-bold">{page.title}</h2>

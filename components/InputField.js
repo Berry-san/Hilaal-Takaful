@@ -9,6 +9,7 @@ const InputField = ({
   onChange,
   onBlur,
   placeholder,
+  disabled,
 }) => {
   return (
     <div className="">
@@ -24,6 +25,7 @@ const InputField = ({
         value={value}
         onChange={onChange}
         onBlur={onBlur}
+        disabled={disabled}
       />
       {touched && errors ? (
         <p className="mt-1 text-xs font-medium text-red-500">{errors}</p>

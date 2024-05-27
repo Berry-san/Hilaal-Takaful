@@ -24,6 +24,7 @@ const ConfirmDetails = ({ params }) => {
   const [vehicleModel, setVehicleModel] = useState([])
   const [vehicleType, setVehicleType] = useState([])
   const [vehicleColor, setVehicleColor] = useState([])
+  const [vehicleAmount, setVehicleAmount] = useState([])
 
   const fetchData = async () => {
     try {
@@ -38,26 +39,23 @@ const ConfirmDetails = ({ params }) => {
       const responses = await Promise.all([
         axios.get(API_BASE + 'vechile_category', config),
         axios.get(API_BASE + 'vechile_make', config),
-        axios.get(API_BASE + 'vechile_model', config),
         axios.get(API_BASE + 'vechile_type', config),
         axios.get(API_BASE + 'vechile_color', config),
+        axios.get(API_BASE + 'vechile_amount', config),
       ])
 
       setVehicleCategory(responses[0].data.result)
       setVehicleMake(responses[1].data.result)
-      setVehicleModel(responses[2].data.result)
-      setVehicleType(responses[3].data.result)
-      setVehicleColor(responses[4].data.result)
+      // setVehicleModel(responses[2].data.result)
+      setVehicleType(responses[2].data.result)
+      setVehicleColor(responses[3].data.result)
+      setVehicleAmount(responses[4].data.result)
       setIsFetching(false)
     } catch (error) {
       console.error('Error fetching data:', error)
       setIsFetching(false)
     }
   }
-
-  useEffect(() => {
-    fetchData()
-  }, [])
 
   const validationSchema = Yup.object().shape({
     isChecked: Yup.boolean().oneOf(
@@ -84,6 +82,31 @@ const ConfirmDetails = ({ params }) => {
     vehicle_color_id,
     user_type_id,
   } = confirmPolicy
+
+  console.log(amount)
+
+  const fetchVehicleModels = async (vehicleMakeId) => {
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'x-api-key': 987654,
+      },
+    }
+    try {
+      const response = await axios.get(
+        `${API_BASE}vehicle_model?vehicle_make_id=${vehicleMakeId}`,
+        config
+      )
+      setVehicleModel(response.data.result)
+    } catch (error) {
+      console.error('Error fetching vehicle models:', error)
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
+    fetchVehicleModels(vehicle_make_id)
+  }, [vehicle_make_id])
 
   const uploadValues = useFormik({
     initialValues: {
@@ -180,6 +203,7 @@ const ConfirmDetails = ({ params }) => {
                 name="vehicle_category_id"
                 onChange={uploadValues.handleChange}
                 className="w-full p-3 text-sm font-medium bg-[#f4f4f4] rounded"
+                disabled={true}
               >
                 <option>--</option>
                 {vehicleCategory.map((option) => (
@@ -194,6 +218,28 @@ const ConfirmDetails = ({ params }) => {
             </div>
             <div className="">
               <label htmlFor="" className="text-sm font-medium">
+                Vehicle Make
+              </label>
+              <select
+                value={uploadValues.values.vehicle_make_id}
+                name="vehicle_make_id"
+                onChange={uploadValues.handleChange}
+                className="w-full p-3 text-sm font-medium bg-[#f4f4f4] rounded"
+                disabled={true}
+              >
+                <option>--</option>
+                {vehicleMake.map((option) => (
+                  <option
+                    key={option.vehicle_make_id}
+                    value={option.vehicle_make_id}
+                  >
+                    {option.make}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="">
+              <label htmlFor="" className="text-sm font-medium">
                 Vehicle Model
               </label>
               <select
@@ -201,6 +247,7 @@ const ConfirmDetails = ({ params }) => {
                 name="vehicle_model_id"
                 onChange={uploadValues.handleChange}
                 className="w-full p-3 text-sm font-medium bg-[#f4f4f4] rounded"
+                disabled={true}
               >
                 <option>--</option>
                 {vehicleModel.map((option) => (
@@ -218,18 +265,19 @@ const ConfirmDetails = ({ params }) => {
                 Vehicle Make
               </label>
               <select
-                value={uploadValues.values.vehicle_make_id}
-                name="vehicle_make_id"
+                value={uploadValues.values.vehicle_type_id}
+                name="vehicle_type_id"
                 onChange={uploadValues.handleChange}
                 className="w-full p-3 text-sm font-medium bg-[#f4f4f4] rounded"
+                disabled={true}
               >
                 <option>--</option>
-                {vehicleMake.map((option) => (
+                {vehicleType.map((option) => (
                   <option
-                    key={option.vehicle_make_id}
-                    value={option.vehicle_make_id}
+                    key={option.vehicle_type_id}
+                    value={option.vehicle_type_id}
                   >
-                    {option.make}
+                    {option.TYPE}
                   </option>
                 ))}
               </select>
@@ -243,6 +291,7 @@ const ConfirmDetails = ({ params }) => {
                 name="vehicle_color_id"
                 onChange={uploadValues.handleChange}
                 className="w-full p-3 text-sm font-medium bg-[#f4f4f4] rounded"
+                disabled={true}
               >
                 <option>--</option>
                 {vehicleColor.map((option) => (
@@ -264,6 +313,7 @@ const ConfirmDetails = ({ params }) => {
               onBlur={uploadValues.handleBlur}
               touched={uploadValues.touched.engine_no}
               errors={uploadValues.errors.engine_no}
+              disabled={true}
             />
             <InputField
               type="number"
@@ -274,6 +324,7 @@ const ConfirmDetails = ({ params }) => {
               onBlur={uploadValues.handleBlur}
               touched={uploadValues.touched.chasis_no}
               errors={uploadValues.errors.chasis_no}
+              disabled={true}
             />
             <InputField
               type="number"
@@ -284,6 +335,7 @@ const ConfirmDetails = ({ params }) => {
               onBlur={uploadValues.handleBlur}
               touched={uploadValues.touched.registration_number}
               errors={uploadValues.errors.registration_number}
+              disabled={true}
             />
             <InputField
               type="text"
@@ -294,6 +346,7 @@ const ConfirmDetails = ({ params }) => {
               onBlur={uploadValues.handleBlur}
               touched={uploadValues.touched.engine_capacity}
               errors={uploadValues.errors.engine_capacity}
+              disabled={true}
             />
             <InputField
               type="text"
@@ -304,17 +357,34 @@ const ConfirmDetails = ({ params }) => {
               onBlur={uploadValues.handleBlur}
               touched={uploadValues.touched.year_of_make}
               errors={uploadValues.errors.year_of_make}
+              disabled={true}
             />
-            <InputField
-              type="number"
-              label="Policy Amount"
-              id="amount"
-              value={uploadValues.values.amount}
-              onChange={uploadValues.handleChange}
-              onBlur={uploadValues.handleBlur}
-              touched={uploadValues.touched.amount}
-              errors={uploadValues.errors.amount}
-            />
+            <div className="">
+              <label htmlFor="" className="text-sm font-medium">
+                Policy Amount
+              </label>
+              <select
+                value={uploadValues.values.vehicle_category_id}
+                name="amount"
+                onChange={uploadValues.handleChange}
+                className="w-full p-3 text-sm font-medium bg-[#f4f4f4] rounded"
+                disabled={true}
+              >
+                <option>--</option>
+                {vehicleAmount.map((option) => {
+                  const amount = option.amount
+                  const formatted = new Intl.NumberFormat().format(amount)
+                  return (
+                    <option
+                      key={option.amount}
+                      value={option.vehicle_category_id}
+                    >
+                      {formatted}
+                    </option>
+                  )
+                })}
+              </select>
+            </div>
             {/* <InputField type="text" label="Company name" /> */}
             <InputField
               type="tel"
@@ -325,6 +395,7 @@ const ConfirmDetails = ({ params }) => {
               onBlur={uploadValues.handleBlur}
               touched={uploadValues.touched.phonenumber}
               errors={uploadValues.errors.phonenumber}
+              disabled={true}
             />
             <InputField
               type="email"

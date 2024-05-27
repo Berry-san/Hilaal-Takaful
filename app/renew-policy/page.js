@@ -180,11 +180,11 @@ const RenewPolicy = () => {
           ) : null}
         </form>
       </section>
-      <section className="grid grid-cols-1 gap-5 pt-10 md:grid-cols-3">
+      <section className="">
         {policies.length === 0 ? (
           <p>No Policies Available</p>
         ) : (
-          <div>
+          <div className="grid grid-cols-1 gap-5 pt-10 md:grid-cols-3">
             {loading ? (
               <p>Loading....</p>
             ) : (
