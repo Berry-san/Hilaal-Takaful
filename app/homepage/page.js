@@ -37,13 +37,18 @@ export default function HomePage() {
               key={index}
               className="w-full border rounded-md shadow-lg border-slate-200"
             >
-              <Image
-                src={page.image}
-                width={600}
-                height={10}
-                alt=""
-                className="object-fit"
-              />
+              <div className="rounded-md">
+                <Image
+                  src={page.image}
+                  width={600}
+                  height={400}
+                  sizes=""
+                  alt=""
+                  // layout="responsive" // Set layout to responsive
+                  className="object-cover rounded-t-md h-56"
+                />
+              </div>
+
               <section className="flex justify-between p-5">
                 <div className="flex flex-col gap-3">
                   <h2 className="font-bold">{page.title}</h2>
