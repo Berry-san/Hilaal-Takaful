@@ -83,8 +83,6 @@ const ConfirmDetails = ({ params }) => {
     user_type_id,
   } = confirmPolicy
 
-  console.log(amount)
-
   const fetchVehicleModels = async (vehicleMakeId) => {
     const config = {
       headers: {
@@ -376,7 +374,7 @@ const ConfirmDetails = ({ params }) => {
                   const formatted = new Intl.NumberFormat().format(amount)
                   return (
                     <option
-                      key={option.amount}
+                      key={option.vehicle_category_id}
                       value={option.vehicle_category_id}
                     >
                       {formatted}

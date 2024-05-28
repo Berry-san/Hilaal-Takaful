@@ -8,7 +8,7 @@ const Button = ({ text, onClick, image, disabled }) => {
       className="flex items-center justify-center px-3 py-2 text-lg text-white rounded bg-dark"
       disabled={disabled}
     >
-      {text}
+      {disabled ? 'Loading' : text}
       {image && (
         <Image src={image} width={20} height={20} alt="" className="ml-3" />
       )}

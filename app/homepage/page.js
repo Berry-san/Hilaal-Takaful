@@ -42,7 +42,7 @@ export default function HomePage() {
                   src={page.image}
                   width={600}
                   height={400}
-                  sizes=""
+                  loading="lazy"
                   alt=""
                   // layout="responsive" // Set layout to responsive
                   className="object-cover rounded-t-md h-56"
@@ -51,7 +51,7 @@ export default function HomePage() {
 
               <section className="flex justify-between p-5">
                 <div className="flex flex-col gap-3">
-                  <h2 className="font-bold">{page.title}</h2>
+                  <h2 className="font-extrabold text-xl">{page.title}</h2>
                   <p>{page.text}</p>
                 </div>
                 <Image
