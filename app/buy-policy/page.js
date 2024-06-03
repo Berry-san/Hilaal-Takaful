@@ -14,6 +14,8 @@ import { getCertificate } from '@/redux/features/successful-slice'
 import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import { Audio, Bars } from 'react-loader-spinner'
+import LoadingAnimation from '@/components/Loading'
+import Button from '@/components/Button'
 
 const BuyPolicy = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -232,7 +234,7 @@ const BuyPolicy = () => {
 
   return isFetching ? (
     <div className="flex items-center justify-center">
-      <p>Loading.....</p>
+      <LoadingAnimation />
     </div>
   ) : (
     <div>
@@ -477,13 +479,14 @@ const BuyPolicy = () => {
             ) : null}
           </div>
           <div className="flex items-end justify-end">
-            <button
+            <Button text="Make payment" disabled={isLoading} />
+            {/* <button
               type="submit"
               className="flex items-center justify-center w-40 px-4 py-3 mt-5 text-sm font-medium text-center text-white rounded bg-dark"
               disabled={isLoading}
             >
               {isLoading ? 'Loading...' : 'Make payment'}
-            </button>
+            </button> */}
           </div>
         </form>
       </div>

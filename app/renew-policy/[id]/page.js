@@ -9,6 +9,7 @@ import qs from 'qs'
 import BackButton from '@/components/back-button'
 import InputField from '@/components/InputField'
 import * as Yup from 'yup'
+import LoadingAnimation from '@/components/Loading'
 
 const ConfirmDetails = ({ params }) => {
   const { policy } = useSelector((state) => state.policy)
@@ -163,7 +164,11 @@ const ConfirmDetails = ({ params }) => {
     },
   })
 
-  return (
+  return isFetching ? (
+    <div className="flex items-center justify-center">
+      <LoadingAnimation />
+    </div>
+  ) : (
     <div>
       <div className="text-left">
         <div className="flex items-center mb-5 space-x-5">
@@ -435,7 +440,7 @@ const ConfirmDetails = ({ params }) => {
               className="flex items-center justify-center w-40 px-4 py-3 mt-5 text-sm font-medium text-center text-white rounded bg-dark"
               disabled={isLoading}
             >
-              {isLoading ? <p>Loading...</p> : 'Make payment'}
+              {isLoading ? <LoadingAnimation /> : 'Make payment'}
             </button>
           </div>
         </form>

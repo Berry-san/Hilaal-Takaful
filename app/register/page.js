@@ -9,6 +9,7 @@ import * as Yup from 'yup'
 import { API_BASE } from '@/middleware/API_BASE'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Button from '@/components/Button'
 
 const Register = () => {
   const router = useRouter()
@@ -236,7 +237,7 @@ const Register = () => {
                         >
                           {showPassword ? (
                             <svg
-                              xmlns="http://www.w3.org/2000/svg"
+                              xmlns="https://www.w3.org/2000/svg"
                               fill="none"
                               viewBox="0 0 24 24"
                               strokeWidth={1.5}
@@ -251,7 +252,7 @@ const Register = () => {
                             </svg>
                           ) : (
                             <svg
-                              xmlns="http://www.w3.org/2000/svg"
+                              xmlns="https://www.w3.org/2000/svg"
                               fill="none"
                               viewBox="0 0 24 24"
                               strokeWidth={1.5}
@@ -283,8 +284,8 @@ const Register = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between w-full mt-5">
-                  <p className="text-sm">
+                <div className="flex flex-col md:flex-row items-center md:justify-between w-full mt-5 gap-5 md:gap-0">
+                  <p className="text-sm order-2 md:order-1">
                     Existing User?{' '}
                     <Link href="/login">
                       <span className="font-semibold underline">Log In</span>
@@ -292,7 +293,7 @@ const Register = () => {
                   </p>
                   <button
                     type="submit"
-                    className="px-4 py-3 text-white rounded bg-dark"
+                    className="px-4 py-3 text-white rounded bg-dark order-1 lg:order-2 w-full md:w-40"
                     disabled={loading}
                   >
                     {loading ? 'Loading...' : 'Register'}

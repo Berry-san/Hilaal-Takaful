@@ -13,6 +13,7 @@ import * as Yup from 'yup'
 import { toast } from 'react-toastify'
 import { getSinglePolicy } from '@/redux/features/policy-slice'
 import { useDispatch } from 'react-redux'
+import LoadingAnimation from '@/components/Loading'
 
 const RenewPolicy = () => {
   const [loading, setLoading] = useState(false)
@@ -186,7 +187,7 @@ const RenewPolicy = () => {
         ) : (
           <div className="grid grid-cols-1 gap-5 pt-10 md:grid-cols-3">
             {loading ? (
-              <p>Loading....</p>
+              <LoadingAnimation />
             ) : (
               policies.map((policy, index) => (
                 <Card
