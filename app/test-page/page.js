@@ -86,7 +86,41 @@ const Test = () => {
   //         console.log(error)
   //       })
   //   }
-  postData()
+  // postData()
+
+  const decent = () => {
+    axios
+      .get('https://mosquepay.org/insurance_api/v1/api/vechile_category', {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'x-api-key': 987654,
+        },
+      })
+      .then((response) => {
+        console.log(response.data)
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error)
+      })
+  }
+
+  decent()
+
+  // useEffect(() => {
+  //   axios
+  //     .get('https://mosquepay.org/insurance_api/v1/api/vechile_category', {
+  //       headers: {
+  //         'Content-Type': 'application/x-www-form-urlencoded',
+  //         'x-api-key': 987654,
+  //       },
+  //     })
+  //     .then((response) => {
+  //       console.log(response.data)
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error fetching data:', error)
+  //     })
+  // }, []) // Add the empty array as the second argument to run the effect only once
 
   return (
     <div>

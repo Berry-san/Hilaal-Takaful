@@ -13,18 +13,25 @@ import InputField from '@/components/InputField'
 import { getCertificate } from '@/redux/features/successful-slice'
 import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
-import { Audio, Bars } from 'react-loader-spinner'
 import LoadingAnimation from '@/components/Loading'
 import Button from '@/components/Button'
+import axiosInstance from '@/utils/axios'
 
 const BuyPolicy = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [isFetching, setIsFetching] = useState(false)
-  const [vehicleCategory, setVehicleCategory] = useState([])
-  const [vehicleMake, setVehicleMake] = useState([])
+  // const [vehicleCategory, setVehicleCategory] = useState([])
+  // const [vehicleMake, setVehicleMake] = useState([])
+  // const [vehicleType, setVehicleType] = useState([])
+  // const [vehicleColor, setVehicleColor] = useState([])
+  const [data, setData] = useState({
+    vehicleCategory: [],
+    vehicleMake: [],
+    vehicleColor: [],
+    vehicleType: [],
+  })
+  const [error, setError] = useState(null)
   const [vehicleModel, setVehicleModel] = useState([])
-  const [vehicleType, setVehicleType] = useState([])
-  const [vehicleColor, setVehicleColor] = useState([])
   const [amount, setAmount] = useState('')
   const [formattedAmount, setFormattedAmount] = useState('')
 
@@ -35,9 +42,7 @@ const BuyPolicy = () => {
     },
   }
 
-  // console.log(vehicleCategory, vehicleMake, vehicleType)
-
-  const { isAuthenticated, role } = useSelector((state) => state.auth.user)
+  const { role } = useSelector((state) => state.auth.user)
 
   const dispatch = useDispatch()
 
@@ -49,37 +54,80 @@ const BuyPolicy = () => {
     user_type_id = role
   }
 
-  const fetchData = async () => {
-    try {
+  // const fetchData = async () => {
+  //   try {
+  //     const config = {
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //         'x-api-key': 987654,
+  //       },
+  //     }
+  //     setIsFetching(true)
+
+  //     const responses = await Promise.all([
+  //       axios.get(API_BASE + 'vechile_category', config),
+  //       axios.get(API_BASE + 'vechile_make', config),
+  //       // axios.get('vechile_model', config),
+  //       axios.get(API_BASE + 'vechile_type', config),
+  //       axios.get(API_BASE + 'vechile_color', config),
+  //     ])
+
+  //     setVehicleCategory(responses[0].data.result)
+  //     setVehicleMake(responses[1].data.result)
+  //     // setVehicleModel(responses[2].data.result)
+  //     setVehicleType(responses[2].data.result)
+  //     setVehicleColor(responses[3].data.result)
+  //     setIsFetching(false)
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error)
+  //     setIsFetching(false)
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   fetchData()
+  // }, [])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsFetching(true)
+      setError(null)
+
+      const API_BASE = 'https://mosquepay.org/insurance_api/v1/api/'
+      const endpoints = [
+        `${API_BASE}vechile_category`,
+        `${API_BASE}vechile_make`,
+        `${API_BASE}vechile_color`,
+        `${API_BASE}vechile_type`,
+      ]
+
       const config = {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'x-api-key': 987654,
+          'x-api-key': '987654',
         },
       }
-      setIsFetching(true)
 
-      const responses = await Promise.all([
-        axios.get(API_BASE + 'vechile_category', config),
-        axios.get(API_BASE + 'vechile_make', config),
-        // axios.get(API_BASE + 'vechile_model', config),
-        axios.get(API_BASE + 'vechile_type', config),
-        axios.get(API_BASE + 'vechile_color', config),
-      ])
-
-      setVehicleCategory(responses[0].data.result)
-      setVehicleMake(responses[1].data.result)
-      // setVehicleModel(responses[2].data.result)
-      setVehicleType(responses[2].data.result)
-      setVehicleColor(responses[3].data.result)
-      setIsFetching(false)
-    } catch (error) {
-      console.error('Error fetching data:', error)
-      setIsFetching(false)
+      try {
+        const [categoryResponse, makeResponse, colorResponse, typeResponse] =
+          await Promise.all(
+            endpoints.map((endpoint) => axios.get(endpoint, config))
+          )
+        setIsFetching(true)
+        setData({
+          vehicleCategory: categoryResponse.data.result,
+          vehicleMake: makeResponse.data.result,
+          vehicleColor: colorResponse.data.result,
+          vehicleType: typeResponse.data.result,
+        })
+        setIsFetching(false)
+      } catch (err) {
+        setError('Error fetching data')
+        console.error('Error fetching data:', err)
+        setIsFetching(false)
+      }
     }
-  }
 
-  useEffect(() => {
     fetchData()
   }, [])
 
@@ -101,8 +149,8 @@ const BuyPolicy = () => {
 
   const handleCategoryChange = (event) => {
     const selectedCategoryId = event.target.value
-    const selectedCategory = vehicleCategory.find(
-      (category) => category.vehicle_category_id == selectedCategoryId
+    const selectedCategory = data.vehicleCategory.find(
+      (category) => category.vehicle_category_id === selectedCategoryId
     )
     if (selectedCategory) {
       const formatted = formatAmount(selectedCategory.amount)
@@ -124,7 +172,11 @@ const BuyPolicy = () => {
     const selectedMakeId = event.target.value
     uploadValues.setFieldValue('vehicle_make_id', selectedMakeId)
     fetchVehicleModels(selectedMakeId)
-    console.log(vehicleModel)
+  }
+
+  const handleFileChange = (event) => {
+    const { id, files } = event.target
+    uploadValues.setFieldValue(id, files[0])
   }
 
   const validationSchema = Yup.object().shape({
@@ -147,6 +199,9 @@ const BuyPolicy = () => {
     // vehicle_make_id: Yup.string().required('Vehicle Make is required'),
     // vehicle_model_id: Yup.string().required('Vehicle Model is required'),
     // vehicle_color_id: Yup.string().required('Vehicle Color is required'),
+    // image1: Yup.mixed().required('Image 1 is required'),
+    // image2: Yup.mixed().required('Image 2 is required'),
+    // image3: Yup.mixed().required('Image 3 is required'),
     isChecked: Yup.boolean()
       .oneOf([true], 'You must verify that these details belong to you.')
       .required('Verification is required'),
@@ -169,28 +224,12 @@ const BuyPolicy = () => {
       vehicle_make_id: '',
       vehicle_model_id: '',
       vehicle_color_id: '',
+      image1: null,
+      image2: null,
+      image3: null,
       user_type_id,
       isChecked: false,
     },
-    // initialValues: {
-    //   insured_name: 'Sam',
-    //   contact_address: 'no 7 adeola road',
-    //   amount: '15000',
-    //   email: 'profshubby@gmail.com',
-    //   phonenumber: '09067508765',
-    //   engine_no: '345673245677987',
-    //   chasis_no: '87654321908765',
-    //   year_of_make: '2034',
-    //   registration_number: '56478698',
-    //   engine_capacity: '1.3hl',
-    //   vehicle_category_id: 1,
-    //   vehicle_type_id: 1,
-    //   vehicle_make_id: 1,
-    //   vehicle_model_id: 1,
-    //   vehicle_color_id: 1,
-    //   user_type_id: 1,
-    // },
-    // validationSchema: {},
     validationSchema: validationSchema,
     onSubmit: async () => {
       setIsLoading(true)
@@ -203,7 +242,7 @@ const BuyPolicy = () => {
 
       try {
         const response = await axios.post(
-          'https://mosquepay.org/insurance_api/v1/api/hilail_third_party_payment',
+          'https://mosquepay.org/insurance_api/v1/api/new_hilail_third_party_payment',
           qs.stringify(uploadValues.values),
           config
         )
@@ -224,8 +263,9 @@ const BuyPolicy = () => {
           toast.error(response.data.message)
           console.error('Failed to fetch data')
         }
+        setIsLoading(false)
       } catch (error) {
-        toast.error(response.data.message)
+        toast.error(error)
         console.error('Error fetching data:', error)
       }
       setIsLoading(false)
@@ -249,7 +289,7 @@ const BuyPolicy = () => {
           <div className="grid grid-cols-1 gap-3 text-left md:grid-cols-2 lg:grid-cols-3">
             <InputField
               type="text"
-              label="Insurer Name"
+              label="Client Name"
               id="insured_name"
               value={uploadValues.values.insured_name}
               onChange={uploadValues.handleChange}
@@ -278,7 +318,7 @@ const BuyPolicy = () => {
                 className="w-full p-3 text-sm font-medium bg-[#f4f4f4] rounded"
               >
                 <option>--</option>
-                {vehicleCategory.map((option) => (
+                {data.vehicleCategory.map((option) => (
                   <option
                     key={option.vehicle_category_id}
                     value={option.vehicle_category_id}
@@ -299,7 +339,7 @@ const BuyPolicy = () => {
                 className="w-full p-3 text-sm font-medium bg-[#f4f4f4] rounded"
               >
                 <option>--</option>
-                {vehicleMake.map((option) => (
+                {data.vehicleMake.map((option) => (
                   <option
                     key={option.vehicle_make_id}
                     value={option.vehicle_make_id}
@@ -342,7 +382,7 @@ const BuyPolicy = () => {
                 className="w-full p-3 text-sm font-medium bg-[#f4f4f4] rounded"
               >
                 <option>--</option>
-                {vehicleColor.map((option) => (
+                {data.vehicleColor.map((option) => (
                   <option
                     key={option.vehicle_color_id}
                     value={option.vehicle_color_id}
@@ -363,7 +403,7 @@ const BuyPolicy = () => {
                 className="w-full p-3 text-sm font-medium bg-[#f4f4f4] rounded"
               >
                 <option>--</option>
-                {vehicleType.map((option) => (
+                {data.vehicleType.map((option) => (
                   <option
                     key={option.vehicle_type_id}
                     value={option.vehicle_type_id}
@@ -394,8 +434,8 @@ const BuyPolicy = () => {
               errors={uploadValues.errors.chasis_no}
             />
             <InputField
-              type="number"
-              label="Registration Number"
+              type="text"
+              label="Plate Number"
               id="registration_number"
               value={uploadValues.values.registration_number}
               onChange={uploadValues.handleChange}
@@ -432,6 +472,7 @@ const BuyPolicy = () => {
               onBlur={uploadValues.handleBlur}
               touched={uploadValues.touched.amount}
               errors={uploadValues.errors.amount}
+              disabled={true}
             />
             {/* <InputField type="text" label="Company name" /> */}
             <InputField
@@ -454,7 +495,59 @@ const BuyPolicy = () => {
               touched={uploadValues.touched.email}
               errors={uploadValues.errors.email}
             />
+            <div className="">
+              <label htmlFor="image1" className="text-sm font-medium">
+                Upload Vehicle Lisence Document
+              </label>
+              <input
+                type="file"
+                id="image1"
+                className="w-full p-3 text-sm font-medium bg-[#f4f4f4] rounded"
+                onChange={handleFileChange}
+                onBlur={uploadValues.handleBlur}
+              />
+              {uploadValues.touched.image1 && uploadValues.errors.image1 && (
+                <div className="text-sm text-red-600">
+                  {uploadValues.errors.image1}
+                </div>
+              )}
+            </div>
+            <div className="">
+              <label htmlFor="image2" className="text-sm font-medium">
+                Upload National ID (NIN)
+              </label>
+              <input
+                type="file"
+                id="image2"
+                className="w-full p-3 text-sm font-medium bg-[#f4f4f4] rounded"
+                onChange={handleFileChange}
+                onBlur={uploadValues.handleBlur}
+              />
+              {uploadValues.touched.image2 && uploadValues.errors.image2 && (
+                <div className="text-sm text-red-600">
+                  {uploadValues.errors.image2}
+                </div>
+              )}
+            </div>
+            <div className="">
+              <label htmlFor="image3" className="text-sm font-medium">
+                Upload Utility Bill
+              </label>
+              <input
+                type="file"
+                id="image3"
+                className="w-full p-3 text-sm font-medium bg-[#f4f4f4] rounded"
+                onChange={handleFileChange}
+                onBlur={uploadValues.handleBlur}
+              />
+              {uploadValues.touched.image3 && uploadValues.errors.image3 && (
+                <div className="text-sm text-red-600">
+                  {uploadValues.errors.image3}
+                </div>
+              )}
+            </div>
           </div>
+
           <div>
             <label className="flex items-center mt-3">
               <input
@@ -480,13 +573,6 @@ const BuyPolicy = () => {
           </div>
           <div className="flex items-end justify-end">
             <Button text="Make payment" disabled={isLoading} />
-            {/* <button
-              type="submit"
-              className="flex items-center justify-center w-40 px-4 py-3 mt-5 text-sm font-medium text-center text-white rounded bg-dark"
-              disabled={isLoading}
-            >
-              {isLoading ? 'Loading...' : 'Make payment'}
-            </button> */}
           </div>
         </form>
       </div>

@@ -6,7 +6,7 @@ const Button = ({ text, onClick, image, disabled }) => {
     <button
       type="submit"
       onClick={onClick}
-      className="flex items-center justify-center px-3 py-2 text-lg text-white rounded bg-dark w-full md:w-40"
+      className="flex items-center justify-center w-full px-2 py-3 text-white rounded text-md bg-dark md:w-40"
       disabled={disabled}
     >
       {disabled ? <LoadingAnimation /> : text}

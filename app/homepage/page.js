@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useSelector } from 'react-redux'
+import axios from 'axios'
 
 const pages = [
   {
@@ -45,13 +46,13 @@ export default function HomePage() {
                   loading="lazy"
                   alt=""
                   // layout="responsive" // Set layout to responsive
-                  className="object-cover rounded-t-md h-56"
+                  className="object-cover h-56 rounded-t-md"
                 />
               </div>
 
               <section className="flex justify-between p-5">
                 <div className="flex flex-col gap-3">
-                  <h2 className="font-extrabold text-xl">{page.title}</h2>
+                  <h2 className="text-xl font-extrabold">{page.title}</h2>
                   <p>{page.text}</p>
                 </div>
                 <Image
