@@ -180,28 +180,26 @@ const BuyPolicy = () => {
   }
 
   const validationSchema = Yup.object().shape({
-    // insured_name: Yup.string()
-    //   .min(3, 'Must be more than three characters')
-    //   .required('Insurer Name is required'),
-    // contact_address: Yup.string().required('Contact Address is required'),
-    // amount: Yup.number().required('Vehicle Amount is required'),
-    // email: Yup.string().email('Invalid email').required('Email is required'),
-    // phonenumber: Yup.string().required('Phone Number is required'),
-    // engine_no: Yup.string().required('Engine Number is required'),
-    // chasis_no: Yup.string().required('Chasis Number is required'),
-    // year_of_make: Yup.string().required('Year of Make is required'),
-    // registration_number: Yup.string().required(
-    //   'Registration Number is required'
-    // ),
-    // engine_capacity: Yup.string().required('Engine Capacity is required'),
-    // vehicle_category_id: Yup.string().required('Vehicle Category is required'),
-    // vehicle_type_id: Yup.string().required('Vehicle Type is required'),
-    // vehicle_make_id: Yup.string().required('Vehicle Make is required'),
-    // vehicle_model_id: Yup.string().required('Vehicle Model is required'),
-    // vehicle_color_id: Yup.string().required('Vehicle Color is required'),
-    // image1: Yup.mixed().required('Image 1 is required'),
-    // image2: Yup.mixed().required('Image 2 is required'),
-    // image3: Yup.mixed().required('Image 3 is required'),
+    insured_name: Yup.string()
+      .min(3, 'Must be more than three characters')
+      .required('Insurer Name is required'),
+    contact_address: Yup.string().required('Contact Address is required'),
+    amount: Yup.number().required('Vehicle Amount is required'),
+    email: Yup.string().email('Invalid email').required('Email is required'),
+    phonenumber: Yup.string().required('Phone Number is required'),
+    engine_no: Yup.string().required('Engine Number is required'),
+    chasis_no: Yup.string().required('Chasis Number is required'),
+    year_of_make: Yup.string().required('Year of Make is required'),
+    registration_number: Yup.string().required('Plate Number is required'),
+    engine_capacity: Yup.string().required('Engine Capacity is required'),
+    vehicle_category_id: Yup.string().required('Vehicle Category is required'),
+    vehicle_type_id: Yup.string().required('Vehicle Type is required'),
+    vehicle_make_id: Yup.string().required('Vehicle Make is required'),
+    vehicle_model_id: Yup.string().required('Vehicle Model is required'),
+    vehicle_color_id: Yup.string().required('Vehicle Color is required'),
+    image1: Yup.mixed().required('Image 1 is required'),
+    image2: Yup.mixed().required('Image 2 is required'),
+    image3: Yup.mixed().required('Image 3 is required'),
     isChecked: Yup.boolean()
       .oneOf([true], 'You must verify that these details belong to you.')
       .required('Verification is required'),
@@ -502,15 +500,14 @@ const BuyPolicy = () => {
               <input
                 type="file"
                 id="image1"
-                className="w-full p-3 text-sm font-medium bg-[#f4f4f4] rounded"
+                className={`w-full p-3 text-sm font-medium bg-[#f4f4f4] rounded ${
+                  uploadValues.touched.image1 && uploadValues.errors.image1
+                    ? 'border border-red-500'
+                    : ''
+                }`}
                 onChange={handleFileChange}
                 onBlur={uploadValues.handleBlur}
               />
-              {uploadValues.touched.image1 && uploadValues.errors.image1 && (
-                <div className="text-sm text-red-600">
-                  {uploadValues.errors.image1}
-                </div>
-              )}
             </div>
             <div className="">
               <label htmlFor="image2" className="text-sm font-medium">
@@ -519,15 +516,15 @@ const BuyPolicy = () => {
               <input
                 type="file"
                 id="image2"
-                className="w-full p-3 text-sm font-medium bg-[#f4f4f4] rounded"
+                // className="w-full p-3 text-sm font-medium bg-[#f4f4f4] rounded"
+                className={`w-full p-3 text-sm font-medium bg-[#f4f4f4] rounded ${
+                  uploadValues.touched.image2 && uploadValues.errors.image2
+                    ? 'border border-red-500'
+                    : ''
+                }`}
                 onChange={handleFileChange}
                 onBlur={uploadValues.handleBlur}
               />
-              {uploadValues.touched.image2 && uploadValues.errors.image2 && (
-                <div className="text-sm text-red-600">
-                  {uploadValues.errors.image2}
-                </div>
-              )}
             </div>
             <div className="">
               <label htmlFor="image3" className="text-sm font-medium">
@@ -536,15 +533,14 @@ const BuyPolicy = () => {
               <input
                 type="file"
                 id="image3"
-                className="w-full p-3 text-sm font-medium bg-[#f4f4f4] rounded"
+                className={`w-full p-3 text-sm font-medium bg-[#f4f4f4] rounded ${
+                  uploadValues.touched.image3 && uploadValues.errors.image3
+                    ? 'border border-red-500'
+                    : ''
+                }`}
                 onChange={handleFileChange}
                 onBlur={uploadValues.handleBlur}
               />
-              {uploadValues.touched.image3 && uploadValues.errors.image3 && (
-                <div className="text-sm text-red-600">
-                  {uploadValues.errors.image3}
-                </div>
-              )}
             </div>
           </div>
 

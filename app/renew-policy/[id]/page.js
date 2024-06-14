@@ -330,8 +330,8 @@ const ConfirmDetails = ({ params }) => {
               disabled={true}
             />
             <InputField
-              type="number"
-              label="Registration Number"
+              type="text"
+              label="Plate Number"
               id="registration_number"
               value={uploadValues.values.registration_number}
               onChange={uploadValues.handleChange}
