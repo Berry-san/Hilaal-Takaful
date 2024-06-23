@@ -15,8 +15,7 @@ import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import LoadingAnimation from '@/components/Loading'
 import Button from '@/components/Button'
-import axiosInstance from '@/utils/axios'
-
+import Terms from '@/components/terms'
 const BuyPolicy = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [isFetching, setIsFetching] = useState(false)
@@ -34,6 +33,7 @@ const BuyPolicy = () => {
   const [vehicleModel, setVehicleModel] = useState([])
   const [amount, setAmount] = useState('')
   const [formattedAmount, setFormattedAmount] = useState('')
+  const [showModal, setShowModal] = useState(false)
 
   const config = {
     headers: {
@@ -422,7 +422,7 @@ const BuyPolicy = () => {
               errors={uploadValues.errors.engine_no}
             />
             <InputField
-              type="number"
+              type="text"
               label="Chasis Number"
               id="chasis_no"
               value={uploadValues.values.chasis_no}
@@ -511,7 +511,7 @@ const BuyPolicy = () => {
             </div>
             <div className="">
               <label htmlFor="image2" className="text-sm font-medium">
-                Upload National ID (NIN)
+                Upload Valid Means Of ID
               </label>
               <input
                 type="file"
@@ -544,11 +544,12 @@ const BuyPolicy = () => {
             </div>
           </div>
 
-          <div>
-            <label className="flex items-center mt-3">
+          <div className="mt-3">
+            <label className="flex items-center">
               <input
                 type="checkbox"
                 id="isChecked"
+                className="w-4 h-4 cursor-pointer"
                 checked={uploadValues.values.isChecked}
                 onChange={uploadValues.handleChange}
                 onBlur={uploadValues.handleBlur}
@@ -558,7 +559,16 @@ const BuyPolicy = () => {
                 }
               />
               <span className="ml-2">
-                I verify that these details belong to me.
+                I verify that I have read the{' '}
+                <span
+                  className="text-blue-600 underline cursor-pointer"
+                  onClick={() => {
+                    setShowModal(true)
+                  }}
+                >
+                  terms and conditions
+                </span>{' '}
+                and that details in the form belong to me.
               </span>
             </label>
             {uploadValues.touched.isChecked && uploadValues.errors.isChecked ? (
@@ -572,6 +582,7 @@ const BuyPolicy = () => {
           </div>
         </form>
       </div>
+      <Terms isVisible={showModal} onClose={() => setShowModal(false)} />
     </div>
   )
 }

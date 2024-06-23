@@ -10,6 +10,7 @@ import BackButton from '@/components/back-button'
 import InputField from '@/components/InputField'
 import * as Yup from 'yup'
 import LoadingAnimation from '@/components/Loading'
+import Terms from '@/components/terms'
 
 const ConfirmDetails = ({ params }) => {
   const { policy } = useSelector((state) => state.policy)
@@ -19,7 +20,7 @@ const ConfirmDetails = ({ params }) => {
 
   const [isLoading, setIsLoading] = useState(false)
   const [isFetching, setIsFetching] = useState(false)
-  // const [isChecked, setIsChecked] = useState(false)
+  const [showModal, setShowModal] = useState(false)
   const [vehicleCategory, setVehicleCategory] = useState([])
   const [vehicleMake, setVehicleMake] = useState([])
   const [vehicleModel, setVehicleModel] = useState([])
@@ -179,7 +180,7 @@ const ConfirmDetails = ({ params }) => {
           <div className="grid grid-cols-1 gap-3 text-left md:grid-cols-2 lg:grid-cols-3">
             <InputField
               type="text"
-              label="Insurer Name"
+              label="Client Name"
               id="insured_name"
               value={uploadValues.values.insured_name}
               onChange={uploadValues.handleChange}
@@ -308,7 +309,7 @@ const ConfirmDetails = ({ params }) => {
               </select>
             </div>
             <InputField
-              type="number"
+              type="text"
               label="Engine Number"
               id="engine_no"
               value={uploadValues.values.engine_no}
@@ -319,7 +320,7 @@ const ConfirmDetails = ({ params }) => {
               disabled={true}
             />
             <InputField
-              type="number"
+              type="text"
               label="Chasis Number"
               id="chasis_no"
               value={uploadValues.values.chasis_no}
@@ -411,11 +412,12 @@ const ConfirmDetails = ({ params }) => {
               errors={uploadValues.errors.email}
             />
           </div>
-          <div>
-            <label className="flex items-center mt-3">
+          <div className="mt-3">
+            <label className="flex items-center">
               <input
                 type="checkbox"
                 id="isChecked"
+                className="w-4 h-4 cursor-pointer"
                 checked={uploadValues.values.isChecked}
                 onChange={uploadValues.handleChange}
                 onBlur={uploadValues.handleBlur}
@@ -425,7 +427,16 @@ const ConfirmDetails = ({ params }) => {
                 }
               />
               <span className="ml-2">
-                I verify that these details belong to me.
+                I verify that I have read the{' '}
+                <span
+                  className="text-blue-600 underline cursor-pointer"
+                  onClick={() => {
+                    setShowModal(true)
+                  }}
+                >
+                  terms and conditions
+                </span>{' '}
+                and that details in the form belong to me.
               </span>
             </label>
             {uploadValues.touched.isChecked && uploadValues.errors.isChecked ? (
@@ -445,6 +456,7 @@ const ConfirmDetails = ({ params }) => {
           </div>
         </form>
       </div>
+      <Terms isVisible={showModal} onClose={() => setShowModal(false)} />
     </div>
   )
 }
